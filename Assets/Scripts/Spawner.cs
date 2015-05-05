@@ -4,25 +4,29 @@ using System.Collections.Generic;
 
 public class Spawner : MonoBehaviour
 {
-    struct Projectile
+    class Projectile
     {
         public float angle;
-        public float vel;
+        public float velocity;
         public float delay;
 
-        public Projectile(float angle, float vel, float delay)
+        public Projectile(float angle, float velocity, float delay)
         {
             this.angle = angle;
-            this.vel = vel;
+            this.velocity = velocity;
             this.delay = delay;
         }
     }
 
-    class FloatIntComparer : IComparer<KeyValuePair<float, int>>
+    class BandPair
     {
-        public int Compare(KeyValuePair<float, int> x, KeyValuePair<float, int> y)
+        public int index;
+        public float value;
+
+        public BandPair(int index, float value)
         {
-            return x.Key > y.Key ? 1 : -1;
+            this.index = index;
+            this.value = value;
         }
     }
 
@@ -36,83 +40,100 @@ public class Spawner : MonoBehaviour
     public float delayBetweenSpawn = 1.0f;
 
 
-    private int updateCount = 0;
+    private float lastUpdate;
 
 
-    List<KeyValuePair<float, int>> bandList;
-    LinkedList<Projectile> spawnList;
+    List<BandPair> bandList;
+    List<Projectile> spawnList;
+
+    List<BandPair> maximum;
+    List<BandPair> minimum;
     
 
     public void Start()
     {
-        bandList = new List<KeyValuePair<float, int>>();
-        spawnList = new LinkedList<Projectile>();
-        
+        bandList = new List<BandPair>();
+        spawnList = new List<Projectile>();
+
+        maximum = new List<BandPair>();
+        minimum = new List<BandPair>();
+        lastUpdate = Time.realtimeSinceStartup;
     }
 
     public void FixedUpdate()
     {
         this.Spawn();
 
-        if (updateCount * Time.fixedDeltaTime > delayBetweenSpawn)
-            updateCount = 0;
+        if (Time.realtimeSinceStartup - lastUpdate > delayBetweenSpawn)
+            lastUpdate = Time.realtimeSinceStartup;
         else
-        {
-            updateCount++;
             return;
-        }
 
+        //Get the band spectrum and check if it's empty
         float[] spec = spectrum.BandList;
-        if (spec.Length == 0)
-            return;
 
-        bandList.Clear();
-        for (int i = 0; i < spec.Length; i++)
-            bandList.Add(new KeyValuePair<float, int>(spec[i], i));
-        bandList.Sort(new FloatIntComparer());
-
-        float maxValue, mean, previousValue, sum, current, next;
-        int counter = 1;
-
-        maxValue = mean = previousValue = sum = current = bandList[0].Key;
-        
-        if (maxValue < minimumBand)
-            return;
-
-        spawnList.AddLast(new Projectile(2.0f * Mathf.PI * bandList[0].Value / bandList.Count, velocityMultiplier, 0.0f));
-        for (int i = 1; i < bandList.Count; i++)
+        bool derivative = (spec[1] - spec[0]) > 0.0f;
+        bool nextDerivative;
         {
-            mean = sum / counter;
-            next = bandList[i].Key;
-            int j = bandList[i].Value;
-            for (; current == next && i < bandList.Count; i++)
-            {
-                spawnList.AddLast(new Projectile(2.0f * Mathf.PI * j / bandList.Count, velocityMultiplier, 0.0f));
-                next = (float)bandList[i].Key;
-            }
-            spawnList.AddLast(new Projectile(2.0f * Mathf.PI * j / bandList.Count, velocityMultiplier, 0.0f));
-            
-            counter++;
-            sum += current;
-            previousValue = next;
+            bool lastDerivative = nextDerivative = (spec[0] - spec[spec.Length - 1]) > 0.0f;
+            //If they are equal, continue
+            if (derivative == lastDerivative) { }
+            //If lastDerivative is positive and first derivative is negative -> maximum
+            else if (lastDerivative && !derivative)
+                maximum.Add(new BandPair(0, spec[0]));
+            //Otherwise -> minimum
+            else
+                minimum.Add(new BandPair(0, spec[0]));
         }
+
+        for (int i = 1; i < spec.Length - 1; i++)
+        {
+            nextDerivative = (spec[i + 1] - spec[i]) > 0.0f;
+
+            //If equal, continue
+            if (derivative == nextDerivative)
+                continue;
+            //Negative derivative -> maximum
+            if (derivative == false)
+                maximum.Add(new BandPair(i, spec[i]));
+            else
+                minimum.Add(new BandPair(i, spec[i]));
+            derivative = nextDerivative;
+        }
+
+        {
+            int i = 0, j = 0;
+            for (; i < minimum.Count || j < maximum.Count; i++, j++)
+            {
+                if(i < minimum.Count)
+                    spawnList.Add(new Projectile((2.0f * Mathf.PI * minimum[i].index) / (bandList.Count * 1.0f), minimum[i].value * velocityMultiplier, 0.0f));
+                if(j < maximum.Count)
+                    spawnList.Add(new Projectile((2.0f * Mathf.PI * minimum[i].index) / (bandList.Count * 1.0f), minimum[i].value * velocityMultiplier, 0.0f));
+            }
+        }
+        minimum.Clear();
+        maximum.Clear();
     }
 
     private void Spawn()
     {
         if (spawnList.Count == 0)
             return;
-        foreach (Projectile projectile in spawnList)
+        for (int i = 0; i < spawnList.Count;)
         {
-            if (projectile.delay <= 0.0f)
+            Projectile projectile = spawnList[i];
+            if (projectile.delay < float.Epsilon)
             {
-                GameObject spawn = Instantiate(prefab);
-                spawn.GetComponent<Enemy>().SetAngleAndVelocity(projectile.angle, projectile.vel);
-                spawnList.RemoveFirst();
+                GameObject newEnemy = Instantiate(prefab);
+                newEnemy.GetComponent<Enemy>().SetAngleAndVelocity(projectile.angle, projectile.velocity);
             }
             else
-                spawnList.remo
+            {
+                projectile.delay -= Time.deltaTime;
+                i++;
+                continue;
+            }
+            spawnList.RemoveAt(i);
         }
-
     }
 }
