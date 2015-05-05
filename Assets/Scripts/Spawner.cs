@@ -33,6 +33,11 @@ public class Spawner : MonoBehaviour
     public float delay = 0.02f;
     public float delayBetweenBands = 1.0f;
     public float velocityMultiplier = 0.5f;
+    public float delayBetweenSpawn = 1.0f;
+
+
+    private int updateCount = 0;
+
 
     List<KeyValuePair<float, int>> bandList;
     LinkedList<Projectile> spawnList;
@@ -45,8 +50,18 @@ public class Spawner : MonoBehaviour
         
     }
 
-    public void Update()
+    public void FixedUpdate()
     {
+        this.Spawn();
+
+        if (updateCount * Time.fixedDeltaTime > delayBetweenSpawn)
+            updateCount = 0;
+        else
+        {
+            updateCount++;
+            return;
+        }
+
         float[] spec = spectrum.BandList;
         if (spec.Length == 0)
             return;
@@ -55,6 +70,7 @@ public class Spawner : MonoBehaviour
         for (int i = 0; i < spec.Length; i++)
             bandList.Add(new KeyValuePair<float, int>(spec[i], i));
         bandList.Sort(new FloatIntComparer());
+
         float maxValue, mean, previousValue, sum, current, next;
         int counter = 1;
 
@@ -62,40 +78,40 @@ public class Spawner : MonoBehaviour
         
         if (maxValue < minimumBand)
             return;
-        
-        for (int i = 0; i < bandList.Count; i++)
-        {
-            next = current = (float)bandList[i].Key;
-            int j = bandList[i].Value;
-            mean = sum / counter;
 
-            spawnList.AddLast(new Projectile(j * 2.0f / (float)bandList.Count * Mathf.PI, velocityMultiplier * current, delay * mean / current));
-            while (current == previousValue && i < bandList.Count - 1)
+        spawnList.AddLast(new Projectile(2.0f * Mathf.PI * bandList[0].Value / bandList.Count, velocityMultiplier, 0.0f));
+        for (int i = 1; i < bandList.Count; i++)
+        {
+            mean = sum / counter;
+            next = bandList[i].Key;
+            int j = bandList[i].Value;
+            for (; current == next && i < bandList.Count; i++)
             {
-                i++;
-                spawnList.AddLast(new Projectile(j * 2.0f / (float)bandList.Count * Mathf.PI, velocityMultiplier * current, delay));
-                current = bandList[i].Key;
+                spawnList.AddLast(new Projectile(2.0f * Mathf.PI * j / bandList.Count, velocityMultiplier, 0.0f));
+                next = (float)bandList[i].Key;
             }
+            spawnList.AddLast(new Projectile(2.0f * Mathf.PI * j / bandList.Count, velocityMultiplier, 0.0f));
+            
             counter++;
             sum += current;
             previousValue = next;
         }
-
-        this.Spawn();
     }
 
     private void Spawn()
     {
         if (spawnList.Count == 0)
             return;
-
-        Projectile first = spawnList.First.Value;
-        first.delay -= Time.deltaTime;
-        if (first.delay <= 0.0f)
+        foreach (Projectile projectile in spawnList)
         {
-            GameObject spawn = Instantiate(prefab);
-            spawn.GetComponent<Enemy>().SetAngleAndVelocity(first.angle, first.vel);
-            spawnList.RemoveFirst();
+            if (projectile.delay <= 0.0f)
+            {
+                GameObject spawn = Instantiate(prefab);
+                spawn.GetComponent<Enemy>().SetAngleAndVelocity(projectile.angle, projectile.vel);
+                spawnList.RemoveFirst();
+            }
+            else
+                spawnList.remo
         }
 
     }

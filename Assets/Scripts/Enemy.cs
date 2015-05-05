@@ -18,7 +18,7 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        if (transform.position.x > Camera.main.orthographicSize)
+        if (Mathf.Abs(transform.position.x) > Camera.main.orthographicSize)
             Destroy(gameObject);
     }
 
