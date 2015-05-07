@@ -33,7 +33,6 @@ public class Spawner : MonoBehaviour
     public GameObject prefab;
     public CircularSpectrum spectrum;
     public float minimumBand = 1.0f;
-    public float maximumDifferenceBetweenBands = 10.0f;
     public float delay = 0.02f;
     public float delayBetweenBands = 1.0f;
     public float velocityMultiplier = 0.5f;
@@ -46,6 +45,20 @@ public class Spawner : MonoBehaviour
 
     List<BandPair> maximum;
     List<BandPair> minimum;
+
+    BandPair maxBand;
+    BandPair minBand;
+
+    class BandComparer : Comparer<BandPair>
+    {
+        public override int Compare(BandPair x, BandPair y)
+        {
+            if (x.value == y.value)
+                return (x.index < y.index) ? 1 : -1;
+            return (x.value > y.value) ? 1 : -1;
+        }
+    }
+    BandComparer comparer = new BandComparer();
     
 
     public void Start()
@@ -63,7 +76,7 @@ public class Spawner : MonoBehaviour
 
         if (Time.realtimeSinceStartup - lastUpdate > delayBetweenSpawn)
             lastUpdate = Time.realtimeSinceStartup;
-        else
+        else 
             return;
 
         //Get the band spectrum and check if it's empty
@@ -71,7 +84,6 @@ public class Spawner : MonoBehaviour
 
         bool derivative = (spec[1] - spec[0]) > 0.0f;
         bool nextDerivative;
-        int lastIndex = -1;
 
         //Check if the first band is a maximum or a minimum
         {
@@ -86,9 +98,9 @@ public class Spawner : MonoBehaviour
                 //Otherwise -> minimum
                 else
                     minimum.Add(new BandPair(0, spec[0]));
-                lastIndex = 0;
             }
         }
+
         for (int i = 1; i < spec.Length - 1; i++)
         {
             if (spec[i] < minimumBand)
@@ -106,11 +118,50 @@ public class Spawner : MonoBehaviour
             else
                 maximum.Add(new BandPair(i, spec[i]));
             derivative = nextDerivative;
-            lastIndex = i;
         }
+
+        BandPair currentMax = null;
+        BandPair currentMin = null;
+
+        maximum.Sort(comparer);
+        //maximum.Reverse();
+        minimum.Sort(comparer);
+        minimum.Reverse();
+        if(maximum.Count > 0)
+            currentMax = maximum[0];
+        if (minimum.Count > 0)
+            currentMin = minimum[0];
+
+        bool quit = false;
+        if (maxBand != null && currentMax != null)
+        {
+            //if (Mathf.Abs(maxBand.index - currentMax.index) < 1)
+            //    quit = true;
+            if (Mathf.Abs(maxBand.value - currentMax.value) < 0.5f)
+                quit = true;
+        }
+        if (minBand != null && currentMin != null)
+        {
+            //if (Mathf.Abs(minBand.index - currentMin.index) < 1)
+            //    quit = true;
+            if (Mathf.Abs(minBand.value - currentMin.value) < 0.5f)
+                quit = true;
+        }
+
+        minBand = currentMin;
+        maxBand = currentMax;
+
+        if (quit)
+        {
+            minimum.Clear();
+            maximum.Clear();
+            return;
+        }
+
 
         {
             int i = 0;
+            //int j = 0;
             //for (; i < minimum.Count || j < maximum.Count; i++, j++)
             //{
             //    if(i < minimum.Count)
@@ -129,11 +180,9 @@ public class Spawner : MonoBehaviour
 
             //for (i = 0; i < minimum.Count; i++)
             //    spawnList.Add(new Projectile((2.0f * Mathf.PI * minimum[i].index) / (spec.Length * 1.0f), minimum[i].value * velocityMultiplier, 0.0f));
-            for (i = 0; i < maximum.Count; i++)
+            for (i = 0; i < maximum.Count && (maximum[i].value > 10.0f || i < spectrum.loopCount * 3) && i < spectrum.loopCount * 6; i++)
                 spawnList.Add(new Projectile((2.0f * Mathf.PI * maximum[i].index) / (spec.Length * 1.0f), maximum[i].value * velocityMultiplier, 0.0f));
         }
-        minimum.Clear();
-        maximum.Clear();
     }
 
     private void Spawn()
