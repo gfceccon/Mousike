@@ -20,6 +20,8 @@ public class Enemy : MonoBehaviour
     {
         if (Mathf.Abs(transform.position.x) > Camera.main.orthographicSize)
             Destroy(gameObject);
+        else if (Mathf.Abs(transform.position.y) > Camera.main.orthographicSize)
+            Destroy(gameObject);
     }
 
     public void OnCollisionEnter2D(Collision2D collision)

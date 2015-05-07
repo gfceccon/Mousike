@@ -42,8 +42,6 @@ public class Spawner : MonoBehaviour
 
     private float lastUpdate;
 
-
-    List<BandPair> bandList;
     List<Projectile> spawnList;
 
     List<BandPair> maximum;
@@ -52,7 +50,6 @@ public class Spawner : MonoBehaviour
 
     public void Start()
     {
-        bandList = new List<BandPair>();
         spawnList = new List<Projectile>();
 
         maximum = new List<BandPair>();
@@ -74,42 +71,66 @@ public class Spawner : MonoBehaviour
 
         bool derivative = (spec[1] - spec[0]) > 0.0f;
         bool nextDerivative;
+        int lastIndex = -1;
+
+        //Check if the first band is a maximum or a minimum
         {
             bool lastDerivative = nextDerivative = (spec[0] - spec[spec.Length - 1]) > 0.0f;
             //If they are equal, continue
             if (derivative == lastDerivative) { }
             //If lastDerivative is positive and first derivative is negative -> maximum
-            else if (lastDerivative && !derivative)
-                maximum.Add(new BandPair(0, spec[0]));
-            //Otherwise -> minimum
             else
-                minimum.Add(new BandPair(0, spec[0]));
+            {
+                if (lastDerivative && !derivative)
+                    maximum.Add(new BandPair(0, spec[0]));
+                //Otherwise -> minimum
+                else
+                    minimum.Add(new BandPair(0, spec[0]));
+                lastIndex = 0;
+            }
         }
-
         for (int i = 1; i < spec.Length - 1; i++)
         {
+            if (spec[i] < minimumBand)
+                continue;
+
             nextDerivative = (spec[i + 1] - spec[i]) > 0.0f;
 
             //If equal, continue
             if (derivative == nextDerivative)
                 continue;
-            //Negative derivative -> maximum
-            if (derivative == false)
-                maximum.Add(new BandPair(i, spec[i]));
-            else
+            //Positive derivative -> minnimum
+            if (derivative == true)
                 minimum.Add(new BandPair(i, spec[i]));
+            //Negative derivative -> maximum
+            else
+                maximum.Add(new BandPair(i, spec[i]));
             derivative = nextDerivative;
+            lastIndex = i;
         }
 
         {
-            int i = 0, j = 0;
-            for (; i < minimum.Count || j < maximum.Count; i++, j++)
-            {
-                if(i < minimum.Count)
-                    spawnList.Add(new Projectile((2.0f * Mathf.PI * minimum[i].index) / (bandList.Count * 1.0f), minimum[i].value * velocityMultiplier, 0.0f));
-                if(j < maximum.Count)
-                    spawnList.Add(new Projectile((2.0f * Mathf.PI * minimum[i].index) / (bandList.Count * 1.0f), minimum[i].value * velocityMultiplier, 0.0f));
-            }
+            int i = 0;
+            //for (; i < minimum.Count || j < maximum.Count; i++, j++)
+            //{
+            //    if(i < minimum.Count)
+            //        spawnList.Add(new Projectile((2.0f * Mathf.PI * minimum[i].index) / (bandList.Count * 1.0f), velocityMultiplier, 0.0f));
+            //    if(j < maximum.Count)                                                                            
+            //        spawnList.Add(new Projectile((2.0f * Mathf.PI * maximum[i].index) / (bandList.Count * 1.0f), velocityMultiplier, 0.0f));
+            //}
+            
+
+            //for (i = 0; i < minimum.Count; i++)
+            //    spawnList.Add(new Projectile((2.0f * Mathf.PI * minimum[i].index) / (spec.Length * 1.0f), Mathf.Clamp(Random.value * minimum[i].value + Random.value * 0.5f, 0.2f, 1.0f) * velocityMultiplier, 0.0f));
+            //for (i = 0; i < maximum.Count; i++)
+            //    spawnList.Add(new Projectile((2.0f * Mathf.PI * maximum[i].index) / (spec.Length * 1.0f), Mathf.Clamp(Random.value * maximum[i].value + Random.value * 0.5f, 0.2f, 1.0f) * velocityMultiplier, 0.0f));
+
+            
+
+            //for (i = 0; i < minimum.Count; i++)
+            //    spawnList.Add(new Projectile((2.0f * Mathf.PI * minimum[i].index) / (spec.Length * 1.0f), minimum[i].value * velocityMultiplier, 0.0f));
+            for (i = 0; i < maximum.Count; i++)
+                spawnList.Add(new Projectile((2.0f * Mathf.PI * maximum[i].index) / (spec.Length * 1.0f), maximum[i].value * velocityMultiplier, 0.0f));
         }
         minimum.Clear();
         maximum.Clear();
@@ -122,7 +143,7 @@ public class Spawner : MonoBehaviour
         for (int i = 0; i < spawnList.Count;)
         {
             Projectile projectile = spawnList[i];
-            if (projectile.delay < float.Epsilon)
+            if (projectile.delay < 0.002f)
             {
                 GameObject newEnemy = Instantiate(prefab);
                 newEnemy.GetComponent<Enemy>().SetAngleAndVelocity(projectile.angle, projectile.velocity);
