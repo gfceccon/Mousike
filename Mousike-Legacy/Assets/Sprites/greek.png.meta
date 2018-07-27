@@ -1,0 +1,341 @@
+fileFormatVersion: 2
+guid: 08f9614f51eb7104ba37c6bdb10d6984
+timeCreated: 1428262764
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: greek_0
+    21300002: greek_1
+    21300004: greek_2
+    21300006: greek_3
+    21300008: greek_4
+    21300010: greek_5
+    21300012: greek_6
+    21300014: greek_7
+    21300016: greek_8
+    21300018: greek_9
+    21300020: greek_10
+    21300022: greek_11
+    21300024: greek_12
+    21300026: greek_13
+    21300028: greek_14
+    21300030: greek_15
+    21300032: greek_16
+    21300034: greek_17
+    21300036: greek_18
+    21300038: greek_19
+    21300040: greek_20
+    21300042: greek_21
+    21300044: greek_22
+    21300046: greek_23
+    21300048: greek_24
+    21300050: greek_25
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 8
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: greek_0
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 198
+        width: 46
+        height: 41
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_1
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 181
+        width: 37
+        height: 74
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_2
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 190
+        width: 41
+        height: 57
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_3
+      rect:
+        serializedVersion: 2
+        x: 172
+        y: 189
+        width: 36
+        height: 59
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_4
+      rect:
+        serializedVersion: 2
+        x: 227
+        y: 197
+        width: 34
+        height: 42
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_5
+      rect:
+        serializedVersion: 2
+        x: 276
+        y: 190
+        width: 44
+        height: 56
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_6
+      rect:
+        serializedVersion: 2
+        x: 332
+        y: 190
+        width: 39
+        height: 56
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_7
+      rect:
+        serializedVersion: 2
+        x: 385
+        y: 190
+        width: 43
+        height: 56
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_8
+      rect:
+        serializedVersion: 2
+        x: 446
+        y: 197
+        width: 27
+        height: 42
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_9
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 114
+        width: 50
+        height: 56
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_10
+      rect:
+        serializedVersion: 2
+        x: 60
+        y: 122
+        width: 44
+        height: 41
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_11
+      rect:
+        serializedVersion: 2
+        x: 114
+        y: 112
+        width: 44
+        height: 61
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_12
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 113
+        width: 44
+        height: 59
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_13
+      rect:
+        serializedVersion: 2
+        x: 223
+        y: 120
+        width: 41
+        height: 44
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_14
+      rect:
+        serializedVersion: 2
+        x: 278
+        y: 121
+        width: 40
+        height: 42
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_15
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 122
+        width: 43
+        height: 41
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_16
+      rect:
+        serializedVersion: 2
+        x: 387
+        y: 114
+        width: 37
+        height: 57
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_17
+      rect:
+        serializedVersion: 2
+        x: 441
+        y: 114
+        width: 38
+        height: 58
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_18
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 45
+        width: 45
+        height: 43
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_19
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 44
+        width: 35
+        height: 44
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_20
+      rect:
+        serializedVersion: 2
+        x: 113
+        y: 45
+        width: 44
+        height: 43
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_21
+      rect:
+        serializedVersion: 2
+        x: 172
+        y: 38
+        width: 35
+        height: 57
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_22
+      rect:
+        serializedVersion: 2
+        x: 217
+        y: 45
+        width: 52
+        height: 42
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_23
+      rect:
+        serializedVersion: 2
+        x: 279
+        y: 28
+        width: 37
+        height: 77
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_24
+      rect:
+        serializedVersion: 2
+        x: 324
+        y: 37
+        width: 55
+        height: 59
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: greek_25
+      rect:
+        serializedVersion: 2
+        x: 388
+        y: 28
+        width: 35
+        height: 76
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
